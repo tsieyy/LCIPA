@@ -4,6 +4,12 @@ from main import authenticator
 from utils.login import make_sure_login
 
 
+# 设置页面的状态
+st.set_page_config(
+    page_title="Chat-Bot", page_icon="🦜", layout="wide", initial_sidebar_state="collapsed"
+)
+
+
 @st.experimental_dialog("Logout")
 def _logout():
     st.warning("Are you sure to logout?")
