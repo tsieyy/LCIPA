@@ -1,20 +1,61 @@
-# This is a sample Python script.
-import os
+import streamlit as st
+import streamlit_authenticator as stauth
+
+import yaml
+from yaml.loader import SafeLoader
+
+from utils.login import assert_login
 
 
-# Press Ctrl+F5 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+# 设置页面的状态
+st.set_page_config(
+    page_title="Chat-Bot", page_icon="🦜", layout="wide", initial_sidebar_state="collapsed"
+)
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press F9 to toggle the breakpoint.
+with open('config/passwd.yaml') as file:
+    config = yaml.load(file, Loader=SafeLoader)
+
+authenticator = stauth.Authenticate(
+    config['credentials'],
+    config['cookie']['name'],
+    config['cookie']['key'],
+    config['cookie']['expiry_days'],
+    config['pre-authorized']
+)
 
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    # print_hi('PyCharm')
+@st.experimental_dialog("Login")
+def _login():
+    # 启动登陆功能
+    authenticator.login()
 
-    os.system('streamlit run chat_bot/cb_demo.py')
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+@st.experimental_dialog("Register")
+def _register():
+    try:
+        email_of_registered_user, username_of_registered_user, name_of_registered_user = authenticator.register_user(
+            pre_authorization=False)
+        if email_of_registered_user:
+            st.success('User registered successfully')
+    except Exception as e:
+        st.error(e)
+
+
+if not assert_login():
+    col1, col2 = st.columns(2)
+    with col1:
+        st.header('Login')
+        st.write('click this button below to login.')
+        if st.button('Login', use_container_width=True):
+            _login()
+
+    with col2:
+        st.header('Register')
+        st.write('if you don\'t have a account, you can register.')
+        if st.button('Register', use_container_width=True):
+            _register()
+
+else:
+    st.write('login success')
+
