@@ -1,7 +1,7 @@
 import streamlit as st
 
 from main import authenticator
-from utils.login import assert_login
+from utils.login import make_sure_login
 
 
 @st.experimental_dialog("Logout")
@@ -25,9 +25,7 @@ def _reset():
             st.error(e)
 
 
-if not assert_login():
-    st.info('You need login first! Please switch to main page to login.', icon="ℹ️")
-else:
+if make_sure_login():
     # 登陆成功后
     col1, col2 = st.columns(2)
 
