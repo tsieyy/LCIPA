@@ -1,3 +1,4 @@
 config
 .idea
 poetry.lock
+.ipynb_checkpoints

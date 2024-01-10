@@ -15,7 +15,8 @@ mrkl = AgentExecutor(agent=react_agent, tools=tools)
 
 # Initialize agent_db
 
-
+from langchain_openai import ChatOpenAI
+chat = ChatOpenAI(temperature=0)
 
 
 
