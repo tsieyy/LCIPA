@@ -32,6 +32,8 @@ google-auth-oauthlib = "^1.2.0"
 google-auth-httplib2 = "^0.2.0"
 python-dotenv = "^1.0.1"
 streamlit-authenticator = "^0.3.2"
+google-search-results = "^2.4.2"
+jupyter = "^1.0.0"
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.3.0"

@@ -33,9 +33,10 @@ prompt_ = ChatPromptTemplate.from_messages(
     [
         (
             "system",
-            "You are a helpful assistant. You may not need to use tools for every query - the user may just want to chat!",
+            "You are a helpful assistant. You may not need to use tools for every query - the user may just want to chat! But when they ask you about something that happened in real life, you may need to use tools to ensure that your answers are accurate.",
         ),
-        MessagesPlaceholder(variable_name="messages"),
+        MessagesPlaceholder(variable_name="history"),
+        ("human", "{input}"),
         MessagesPlaceholder(variable_name="agent_scratchpad"),
     ]
 )
@@ -45,10 +46,12 @@ agent = create_openai_tools_agent(chat, tools, prompt_)
 agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=False)
 
 chain = prompt | ChatOpenAI()
+
 chain_with_history = RunnableWithMessageHistory(
-    chain,
+    agent_executor,
     lambda session_id: msgs,
-    input_messages_key="question",
+    input_messages_key="input",
+    output_messages_key="output",
     history_messages_key="history",
 )
 
@@ -62,9 +65,9 @@ if make_sure_login():
         st.chat_message("human").write(prompt)
         # Note: new messages are saved to history automatically by Langchain during run
         config = {"configurable": {"session_id": "any"}}
-        # response = chain_with_history.invoke({"question": prompt}, config)
+        response = chain_with_history.invoke({"input": prompt}, config)
         # st.chat_message("ai").write(response.content)
-        response = agent_executor.invoke({"messages": [HumanMessage(content=prompt)]})
+        # response = agent_executor.invoke({"messages": [HumanMessage(content=prompt)]})
         st.chat_message("ai").write(response['output'])
 
     # Draw the messages at the end, so newly generated ones show up immediately
