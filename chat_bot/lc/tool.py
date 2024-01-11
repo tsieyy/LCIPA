@@ -41,10 +41,10 @@ tools = [
         description="useful for when you need to answer questions about math",
     ),
     Tool(
-        name="Google Search",
+        name="GoogleSearch",
         func=serp_api.run,
         description="This is Google search tool. Useful for searching some real time info, such as news.",
     ),
-    searchtool,
+    # searchtool,
     wikitool,
 ]
