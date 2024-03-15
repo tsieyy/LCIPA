@@ -2,7 +2,10 @@
 
 #制备Bing搜索
 from langchain_community.tools import BingSearchRun
+from langchain_community.tools.tavily_search import TavilySearchResults
 from langchain_community.utilities import BingSearchAPIWrapper
+from langchain_experimental.tools import PythonREPLTool
+
 search_api = BingSearchAPIWrapper(k=1)
 searchtool = BingSearchRun(api_wrapper=search_api)
 searchtool.name = 'BingSearch'
@@ -68,3 +71,15 @@ tools = [
     wikitool,
     # toolkit.get_tools(),     # Gmail  # TODO FIX: this will cause some error...
 ]
+
+
+'''
+    下面这部分工具是给multiagents模块使用的
+'''
+## 制备相关的工具
+# AI网络搜索api
+tavily_tool = TavilySearchResults(max_results=2)
+
+# This executes code locally, which can be unsafe
+python_repl_tool = PythonREPLTool()
+
