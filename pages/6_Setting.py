@@ -45,5 +45,12 @@ if make_sure_login():
         if st.button("Reset", use_container_width=True):
             _reset()
 
+    # file uploader for RAG
+    st.write("you can choose to upload files to open RAG.")
+    uploaded_files = st.file_uploader("Upload PDF files", type=["pdf"], accept_multiple_files=True)
+    if 'up_files' not in st.session_state:
+        st.session_state['up_files'] = uploaded_files
+
+
 
 
