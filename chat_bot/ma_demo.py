@@ -14,7 +14,7 @@ from langchain_core.messages import BaseMessage, HumanMessage
 from langchain_openai import ChatOpenAI
 
 from chat_bot.lc.llm import chat as llm
-from chat_bot.lc.tool import tavily_tool, python_repl_tool, calculator_tool
+from chat_bot.lc.tool import tavily_tool, python_repl_tool, calculator_tool, gmail_toolkit
 
 ''' 
     一些工具函数
@@ -43,7 +43,7 @@ def agent_node(state, agent, name):
     return {"messages": [HumanMessage(content=result["output"], name=name)]}
 
 
-members = ["Researcher", "Coder", "Interlocutor"]
+members = ["Researcher", "Coder", "Interlocutor", "MailManager"]
 system_prompt = (
     "You are a supervisor tasked with managing a conversation between the"
     " following workers:  {members}. Given the following user request,"
@@ -102,6 +102,7 @@ class AgentState(TypedDict):
     next: str
 
 
+# Interlocutor
 # Set up memory
 msgs = StreamlitChatMessageHistory(key="ma_messages")
 if len(msgs.messages) == 0:
@@ -118,9 +119,11 @@ chat_agent = create_agent(llm, [calculator_tool],
 # )
 chat_node = functools.partial(agent_node, agent=chat_agent, name="Interlocutor")
 
+# Researcher
 research_agent = create_agent(llm, [tavily_tool], "You are a web researcher.")
 research_node = functools.partial(agent_node, agent=research_agent, name="Researcher")
 
+# Coder
 # NOTE: THIS PERFORMS ARBITRARY CODE EXECUTION. PROCEED WITH CAUTION
 code_agent = create_agent(
     llm,
@@ -129,10 +132,19 @@ code_agent = create_agent(
 )
 code_node = functools.partial(agent_node, agent=code_agent, name="Coder")
 
+# MailManager
+mail_agent = create_agent(
+    llm,
+    gmail_toolkit.get_tools(),
+    "You have all the tools related to mail and can send or read messages through Gmail."
+)
+mail_node = functools.partial(agent_node, agent=mail_agent, name='MailManager')
+
 workflow = StateGraph(AgentState)
 workflow.add_node("Interlocutor", chat_node)
 workflow.add_node("Researcher", research_node)
 workflow.add_node("Coder", code_node)
+workflow.add_node("MailManager", mail_node)
 workflow.add_node("supervisor", supervisor_chain)
 
 for member in members:
@@ -147,3 +159,5 @@ workflow.add_conditional_edges("supervisor", lambda x: x["next"], conditional_ma
 workflow.set_entry_point("supervisor")
 
 graph = workflow.compile()
+
+

@@ -47,7 +47,7 @@ credentials = get_gmail_credentials(
 )
 api_resource = build_resource_service(credentials=credentials)
 from langchain_community.agent_toolkits import GmailToolkit
-toolkit = GmailToolkit(api_resource=api_resource)
+gmail_toolkit = GmailToolkit(api_resource=api_resource)
 
 
 from langchain.agents import AgentExecutor, Tool, create_react_agent
