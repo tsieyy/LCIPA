@@ -5,6 +5,7 @@ from typing import Annotated, Any, Dict, List, Optional, Sequence, TypedDict, Tu
 import functools
 
 from langchain_community.chat_message_histories import StreamlitChatMessageHistory
+from langchain_core.runnables.history import RunnableWithMessageHistory
 from langgraph.graph import StateGraph, END
 from langchain.output_parsers.openai_functions import JsonOutputFunctionsParser
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
@@ -13,11 +14,12 @@ from langchain_core.messages import BaseMessage, HumanMessage
 from langchain_openai import ChatOpenAI
 
 from chat_bot.lc.llm import chat as llm
-from chat_bot.lc.tool import tavily_tool, python_repl_tool
+from chat_bot.lc.tool import tavily_tool, python_repl_tool, calculator_tool
 
 ''' 
     一些工具函数
 '''
+
 
 def create_agent(llm: ChatOpenAI, tools: list, system_prompt: str):
     # Each worker node will be given a name and some tools.
@@ -41,14 +43,15 @@ def agent_node(state, agent, name):
     return {"messages": [HumanMessage(content=result["output"], name=name)]}
 
 
-
-members = ["Researcher", "Coder", ]
+members = ["Researcher", "Coder", "Interlocutor"]
 system_prompt = (
     "You are a supervisor tasked with managing a conversation between the"
     " following workers:  {members}. Given the following user request,"
     " respond with the worker to act next. Each worker will perform a"
     " task and respond with their results and status. When finished,"
-    " respond with FINISH."
+    " respond with FINISH. In particular, user may only want to have"
+    " a simple conversation and not need to complete certain tasks, "
+    "in this case just use Interlocutor, and then respond with FINISH."
 )
 # Our team supervisor is an LLM node. It just picks the next agent to process
 # and decides when the work is completed
@@ -84,9 +87,9 @@ prompt = ChatPromptTemplate.from_messages(
 ).partial(options=str(options), members=", ".join(members))
 
 supervisor_chain = (
-    prompt
-    | llm.bind_functions(functions=[function_def], function_call="route")
-    | JsonOutputFunctionsParser()
+        prompt
+        | llm.bind_functions(functions=[function_def], function_call="route")
+        | JsonOutputFunctionsParser()
 )
 
 
@@ -98,6 +101,22 @@ class AgentState(TypedDict):
     # The 'next' field indicates where to route to next
     next: str
 
+
+# Set up memory
+msgs = StreamlitChatMessageHistory(key="ma_messages")
+if len(msgs.messages) == 0:
+    msgs.add_ai_message("How can I help you?")
+
+chat_agent = create_agent(llm, [calculator_tool],
+                          "You are a kind friend who can talk to people or answer their questions. Of "
+                          "course, you have reliable tools that you can use to solve math, and when people "
+                          "ask you questions about math, you can easily answer them.")
+# chat_agent_with_history = RunnableWithMessageHistory(
+#     chat_agent,
+#     lambda session_id: msgs,
+#     history_messages_key="history",
+# )
+chat_node = functools.partial(agent_node, agent=chat_agent, name="Interlocutor")
 
 research_agent = create_agent(llm, [tavily_tool], "You are a web researcher.")
 research_node = functools.partial(agent_node, agent=research_agent, name="Researcher")
@@ -111,6 +130,7 @@ code_agent = create_agent(
 code_node = functools.partial(agent_node, agent=code_agent, name="Coder")
 
 workflow = StateGraph(AgentState)
+workflow.add_node("Interlocutor", chat_node)
 workflow.add_node("Researcher", research_node)
 workflow.add_node("Coder", code_node)
 workflow.add_node("supervisor", supervisor_chain)
@@ -127,8 +147,3 @@ workflow.add_conditional_edges("supervisor", lambda x: x["next"], conditional_ma
 workflow.set_entry_point("supervisor")
 
 graph = workflow.compile()
-
-# Set up memory
-msgs = StreamlitChatMessageHistory(key="ma_messages")
-if len(msgs.messages) == 0:
-    msgs.add_ai_message("How can I help you?")

@@ -83,3 +83,8 @@ tavily_tool = TavilySearchResults(max_results=2)
 # This executes code locally, which can be unsafe
 python_repl_tool = PythonREPLTool()
 
+calculator_tool = Tool(
+    name="Calculator",
+    func=llm_math_chain.run,
+    description="useful for when you need to answer questions about math",
+)
