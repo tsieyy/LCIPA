@@ -1,5 +1,6 @@
 import streamlit as st
 import streamlit_authenticator as stauth
+from streamlit_option_menu import option_menu
 
 import yaml
 from yaml.loader import SafeLoader
@@ -11,6 +12,12 @@ from utils.login import assert_login
 st.set_page_config(
     page_title="Chat-Bot", page_icon="🦜", layout="wide", initial_sidebar_state="collapsed"
 )
+
+# TODO: design the menu
+# with st.sidebar:
+#     selected = option_menu("Main Menu", ["Home", 'Settings'],
+#         icons=['house', 'gear'], menu_icon="cast", default_index=1)
+#
 
 
 with open('config/passwd.yaml') as file:

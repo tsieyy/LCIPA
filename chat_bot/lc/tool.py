@@ -2,7 +2,10 @@
 
 #制备Bing搜索
 from langchain_community.tools import BingSearchRun
+from langchain_community.tools.tavily_search import TavilySearchResults
 from langchain_community.utilities import BingSearchAPIWrapper
+from langchain_experimental.tools import PythonREPLTool
+
 search_api = BingSearchAPIWrapper(k=1)
 searchtool = BingSearchRun(api_wrapper=search_api)
 searchtool.name = 'BingSearch'
@@ -27,6 +30,25 @@ serp_api = SerpAPIWrapper()
 # google_tool.description = 'This is Google search tool. Useful for searching some real time info, such as news.'
 
 
+# Gmail
+from langchain_community.tools.gmail.utils import (
+    build_resource_service,
+    get_gmail_credentials,
+)
+from pathlib import Path
+# Can review scopes here https://developers.google.com/gmail/api/auth/scopes
+# For instance, readonly scope is 'https://www.googleapis.com/auth/gmail.readonly'
+CONFIG_PATH = (Path(__file__).parent.parent.parent / "config").absolute()
+print(f"{CONFIG_PATH}/token.json")
+credentials = get_gmail_credentials(
+    token_file=f"{CONFIG_PATH}/token.json",
+    scopes=["https://mail.google.com/"],
+    client_secrets_file=f"{CONFIG_PATH}/cre.json",
+)
+api_resource = build_resource_service(credentials=credentials)
+from langchain_community.agent_toolkits import GmailToolkit
+gmail_toolkit = GmailToolkit(api_resource=api_resource)
+
 
 from langchain.agents import AgentExecutor, Tool, create_react_agent
 from langchain.chains import LLMMathChain
@@ -47,4 +69,22 @@ tools = [
     ),
     # searchtool,
     wikitool,
+    # toolkit.get_tools(),     # Gmail  # TODO FIX: this will cause some error...
 ]
+
+
+'''
+    下面这部分工具是给multiagents模块使用的
+'''
+## 制备相关的工具
+# AI网络搜索api
+tavily_tool = TavilySearchResults(max_results=2)
+
+# This executes code locally, which can be unsafe
+python_repl_tool = PythonREPLTool()
+
+calculator_tool = Tool(
+    name="Calculator",
+    func=llm_math_chain.run,
+    description="useful for when you need to answer questions about math",
+)
