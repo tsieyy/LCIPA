@@ -27,6 +27,23 @@
 
 ## 使用方法
 
+### ❗极为重要的一步❗
+
+LangChain项目依赖很多api,本项目也不例外，如果要正确运行请查看 _‘config_example’_ 目录 下面的配置文件，
+将 _config_example_ 目录重命名为 _config_，然后修改好配置文件，这里也说明一下配置文件都是什么，
+以及如何进行修改。
+
+**目录树：**
+
+```
+.
+├── credentials.json    // gmail邮箱的权限文件，具体信息请看LangChain中的Gmail部分
+├── .env                // 所有的API token，OpenAI的等等。。。
+├── passwd.yaml         // streamlit-authenticator所使用的登陆密码文件（这个项目也用了一个简单登陆管理）
+└── token.json          // gmail权限申请之后自动生成的一个token文件，生成方法可以点开这个文件看看
+```
+
+
 ### 本地运行
 
 本项目使用 *poetry* 作为项目管理工具，需要提前安装好，具体安装过程请自行STFW
