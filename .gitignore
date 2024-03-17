@@ -2,5 +2,4 @@ config
 .idea
 poetry.lock
 .ipynb_checkpoints
-token.json
 __pycache__
