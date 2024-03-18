@@ -5,7 +5,7 @@ from langgraph.graph import StateGraph, END
 import asyncio
 import json
 
-from memory.draft import DraftState
+from researcher.memory.draft import DraftState
 from . import \
     ResearchAgent, \
     ReviewerAgent, \

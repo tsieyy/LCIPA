@@ -6,3 +6,4 @@ token.json
 __pycache__
 temp_files/:
 !temp_files/hello.txt
+researcher/outputs

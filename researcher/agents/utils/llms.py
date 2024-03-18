@@ -2,7 +2,7 @@ from langchain.adapters.openai import convert_openai_messages
 from langchain_openai import ChatOpenAI
 
 
-def call_model(prompt: list, model: str, max_retries: int = 2, response_format: str = None) -> str:
+def call_model(prompt: list, model: str = "gpt-3.5-turbo", max_retries: int = 2, response_format: str = None) -> str:
 
     optional_params = {}
     if response_format == 'json':
