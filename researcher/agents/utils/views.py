@@ -11,6 +11,16 @@ class AgentColor(Enum):
     REVISOR = Fore.LIGHTWHITE_EX
     MASTER = Fore.LIGHTYELLOW_EX
 
+class StreamlitColor(Enum):
+    RESEARCHER = "🔎"
+    EDITOR = "📝"
+    WRITER = "✏️"
+    PUBLISHER = "📖"
+    REVIEWER = "🤓"
+    REVISOR = "🧐"
+    MASTER = "😇"
+
 
 def print_agent_output(output:str, agent: str="RESEARCHER"):
-    print(f"{AgentColor[agent].value}{agent}: {output}{Style.RESET_ALL}")
+    # print(f"{AgentColor[agent].value}{agent}: {output}{Style.RESET_ALL}")
+    print(f"{StreamlitColor[agent].value} {agent}: {output}")

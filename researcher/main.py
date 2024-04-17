@@ -24,7 +24,6 @@ async def main():
 
     chief_editor = ChiefEditorAgent(task)
     research_report = await chief_editor.run_research_task()
-
     return research_report
 
 if __name__ == "__main__":
