@@ -4,7 +4,7 @@
 
 import sys
 import contextlib
-
+import emoji
 
 class StreamlitWriter:
     def __init__(self, st, container):
@@ -12,7 +12,9 @@ class StreamlitWriter:
 
     def write(self, s):
         # self.st.markdown(f'```\n{s}```')
-        self.st.write(s)
+        # self.st.write(s)
+        if s and emoji.is_emoji(s[0]):
+            self.st.write(s)
 
     def flush(self):
         pass

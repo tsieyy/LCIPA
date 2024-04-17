@@ -2,7 +2,7 @@ import streamlit as st
 from utils.login import make_sure_login
 from utils.json import open_task
 from chat_bot.clear_results import with_clear_container
-from researcher import run_task
+from researcher import run_task, RESEARCHER_OUTPUT_PATH
 import asyncio
 
 from utils.redirect import redirect_stdout_to_streamlit
@@ -26,7 +26,7 @@ if make_sure_login():
     if with_clear_container(submit_clicked):
         task = open_task('researcher/task.json')
         task["query"] = user_input
-        task["verbose"] = False
+        # task["verbose"] = False
         if len(guidelines_list) == 0:
             pass
         else:
@@ -39,3 +39,33 @@ if make_sure_login():
                 asyncio.run(run_task(task))
 
             status.update(label="Complete!")
+            research_complete = True
+
+        if RESEARCHER_OUTPUT_PATH != '' and research_complete:
+            col1, col2, col3 = st.columns(3)
+            with col1:
+                with open(RESEARCHER_OUTPUT_PATH + "flower.png", "rb") as file:
+                    btn1 = st.download_button(
+                        label="Download PDF",
+                        data=file,
+                        file_name="research.pdf",
+                        mime="application/pdf"
+                    )
+
+            with col2:
+                with open("flower.png", "rb") as file:
+                    btn2 = st.download_button(
+                        label="Download Markdown",
+                        data=file,
+                        file_name="research.md",
+                        mime="text/x-markdown"
+                    )
+
+            with col3:
+                with open("flower.png", "rb") as file:
+                    btn3 = st.download_button(
+                        label="Download Docx",
+                        data=file,
+                        file_name="research.docx",
+                        mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                    )

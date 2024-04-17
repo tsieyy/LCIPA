@@ -18,7 +18,8 @@ class StreamlitColor(Enum):
     PUBLISHER = "📖"
     REVIEWER = "🤓"
     REVISOR = "🧐"
-    MASTER = "😇"
+    MASTER = "🤔"
+
 
 
 def print_agent_output(output:str, agent: str="RESEARCHER"):
