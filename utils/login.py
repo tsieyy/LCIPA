@@ -21,6 +21,7 @@ def assert_login():
         # 登陆出错
         return False
 
+
 def make_sure_login():
     if not assert_login():
         st.info('You need login first! Please switch to main page to login.', icon="ℹ️")
