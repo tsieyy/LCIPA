@@ -13,8 +13,10 @@ class StreamlitWriter:
     def write(self, s):
         # self.st.markdown(f'```\n{s}```')
         # self.st.write(s)
-        if s and emoji.is_emoji(s[0]):
-            self.st.write(s)
+        pass
+        if s and emoji.is_emoji(s[0]) and s[0] != '📃' and s[0] != '✅':
+            # self.st.write(s)
+            pass
 
     def flush(self):
         pass
