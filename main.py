@@ -6,6 +6,7 @@ import yaml
 from yaml.loader import SafeLoader
 
 from utils.login import assert_login
+# from utils.welcome import CCBOT
 
 
 # 设置页面的状态
@@ -65,5 +66,8 @@ if not assert_login():
 
 else:
     # TODO： 需要加上一些欢迎语句 到时候再写把
-    st.write('login success')
-
+    st.success('Login Success!', icon="✅")
+    with open('README.md', 'r') as file:
+        # 读取文件内容
+        content = file.read()
+    st.markdown(content)

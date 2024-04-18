@@ -1,5 +1,11 @@
 config
+!gpt_researcher/config
 .idea
 poetry.lock
 .ipynb_checkpoints
+token.json
 __pycache__
+temp_files/:
+!temp_files/hello.txt
+researcher/outputs
+researcher/temp_files

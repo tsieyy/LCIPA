@@ -1,106 +1,58 @@
 # multi-agents-demo
 
-import operator
-from typing import Annotated, Any, Dict, List, Optional, Sequence, TypedDict, Tuple, Union
 import functools
 
 from langchain_community.chat_message_histories import StreamlitChatMessageHistory
-from langchain_core.runnables.history import RunnableWithMessageHistory
 from langgraph.graph import StateGraph, END
-from langchain.output_parsers.openai_functions import JsonOutputFunctionsParser
-from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
-from langchain.agents import AgentExecutor, create_openai_tools_agent
-from langchain_core.messages import BaseMessage, HumanMessage
-from langchain_openai import ChatOpenAI
 
+from chat_bot.graph.state import DocWritingState, AgentState
+from chat_bot.graph.tool import write_document, edit_document, read_document, create_outline, python_repl
 from chat_bot.lc.llm import chat as llm
 from chat_bot.lc.tool import tavily_tool, python_repl_tool, calculator_tool, gmail_toolkit
+from chat_bot.graph.utils import create_team_supervisor, create_supervisor, create_agent, prelude, agent_node, \
+    enter_chain, get_last_message, join_graph
 
-''' 
-    一些工具函数
 '''
-
-
-def create_agent(llm: ChatOpenAI, tools: list, system_prompt: str):
-    # Each worker node will be given a name and some tools.
-    prompt = ChatPromptTemplate.from_messages(
-        [
-            (
-                "system",
-                system_prompt,
-            ),
-            MessagesPlaceholder(variable_name="messages"),
-            MessagesPlaceholder(variable_name="agent_scratchpad"),
-        ]
-    )
-    agent = create_openai_tools_agent(llm, tools, prompt)
-    executor = AgentExecutor(agent=agent, tools=tools)
-    return executor
-
-
-def agent_node(state, agent, name):
-    result = agent.invoke(state)
-    return {"messages": [HumanMessage(content=result["output"], name=name)]}
-
-
-members = ["Researcher", "Coder", "Interlocutor", "MailManager"]
-system_prompt = (
-    "You are a supervisor tasked with managing a conversation between the"
-    " following workers:  {members}. Given the following user request,"
-    " respond with the worker to act next. Each worker will perform a"
-    " task and respond with their results and status. When finished,"
-    " respond with FINISH. In particular, user may only want to have"
-    " a simple conversation and not need to complete certain tasks, "
-    "in this case just use Interlocutor, and then respond with FINISH."
+    创建 Document Writing Team
+'''
+doc_writer_agent = create_agent(
+    llm,
+    [write_document, edit_document, read_document],
+    "You are an expert writing a research document.\n"
+    # The {current_files} value is populated automatically by the graph state
+    "Below are files currently in your directory:\n{current_files}",
 )
-# Our team supervisor is an LLM node. It just picks the next agent to process
-# and decides when the work is completed
-options = ["FINISH"] + members
-# Using openai function calling can make output parsing easier for us
-function_def = {
-    "name": "route",
-    "description": "Select the next role.",
-    "parameters": {
-        "title": "routeSchema",
-        "type": "object",
-        "properties": {
-            "next": {
-                "title": "Next",
-                "anyOf": [
-                    {"enum": options},
-                ],
-            }
-        },
-        "required": ["next"],
-    },
-}
-prompt = ChatPromptTemplate.from_messages(
-    [
-        ("system", system_prompt),
-        MessagesPlaceholder(variable_name="messages"),
-        (
-            "system",
-            "Given the conversation above, who should act next?"
-            " Or should we FINISH? Select one of: {options}",
-        ),
-    ]
-).partial(options=str(options), members=", ".join(members))
-
-supervisor_chain = (
-        prompt
-        | llm.bind_functions(functions=[function_def], function_call="route")
-        | JsonOutputFunctionsParser()
+# Injects current directory working state before each call
+context_aware_doc_writer_agent = prelude | doc_writer_agent
+doc_writing_node = functools.partial(
+    agent_node, agent=context_aware_doc_writer_agent, name="DocWriter"
 )
 
+note_taking_agent = create_agent(
+    llm,
+    [create_outline, read_document],
+    "You are an expert senior researcher tasked with writing a paper outline and"
+    " taking notes to craft a perfect paper.{current_files}",
+)
+context_aware_note_taking_agent = prelude | note_taking_agent
+note_taking_node = functools.partial(
+    agent_node, agent=context_aware_note_taking_agent, name="NoteTaker"
+)
 
-# The agent state is the input to each node in the graph
-class AgentState(TypedDict):
-    # The annotation tells the graph that new messages will always
-    # be added to the current states
-    messages: Annotated[Sequence[BaseMessage], operator.add]
-    # The 'next' field indicates where to route to next
-    next: str
+chart_generating_agent = create_agent(
+    llm,
+    [read_document, python_repl],
+    "You are a data viz expert tasked with generating charts for a research project."
+    "{current_files}",
+)
+context_aware_chart_generating_agent = prelude | chart_generating_agent
+chart_generating_node = functools.partial(
+    agent_node, agent=context_aware_note_taking_agent, name="ChartGenerator"
+)
 
+'''
+    创建单一节点
+'''
 
 # Interlocutor
 # Set up memory
@@ -112,11 +64,6 @@ chat_agent = create_agent(llm, [calculator_tool],
                           "You are a kind friend who can talk to people or answer their questions. Of "
                           "course, you have reliable tools that you can use to solve math, and when people "
                           "ask you questions about math, you can easily answer them.")
-# chat_agent_with_history = RunnableWithMessageHistory(
-#     chat_agent,
-#     lambda session_id: msgs,
-#     history_messages_key="history",
-# )
 chat_node = functools.partial(agent_node, agent=chat_agent, name="Interlocutor")
 
 # Researcher
@@ -140,12 +87,33 @@ mail_agent = create_agent(
 )
 mail_node = functools.partial(agent_node, agent=mail_agent, name='MailManager')
 
+
+'''
+    创建 Supervisor
+'''
+members = ["Researcher", "Coder", "Interlocutor", "MailManager", "DocWriter", "NoteTaker", "ChartGenerator"]
+system_prompt = (
+    "You are a supervisor tasked with managing a conversation between the"
+    " following workers:  {members}. Given the following user request,"
+    " respond with the worker to act next. Each worker will perform a"
+    " task and respond with their results and status. When finished,"
+    " respond with FINISH. In particular, user may only want to have"
+    " a simple conversation and not need to complete certain tasks, "
+    "in this case just use Interlocutor, and then respond with FINISH."
+)
+
+supervisor_chain = create_supervisor(llm, system_prompt, members=members)
+
+
 workflow = StateGraph(AgentState)
 workflow.add_node("Interlocutor", chat_node)
 workflow.add_node("Researcher", research_node)
 workflow.add_node("Coder", code_node)
 workflow.add_node("MailManager", mail_node)
 workflow.add_node("supervisor", supervisor_chain)
+workflow.add_node("DocWriter", doc_writing_node)
+workflow.add_node("NoteTaker", note_taking_node)
+workflow.add_node("ChartGenerator", chart_generating_node)
 
 for member in members:
     # We want our workers to ALWAYS "report back" to the supervisor when done
@@ -159,5 +127,3 @@ workflow.add_conditional_edges("supervisor", lambda x: x["next"], conditional_ma
 workflow.set_entry_point("supervisor")
 
 graph = workflow.compile()
-
-
