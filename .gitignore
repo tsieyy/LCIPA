@@ -7,3 +7,4 @@ __pycache__
 temp_files/:
 !temp_files/hello.txt
 researcher/outputs
+researcher/temp_files
