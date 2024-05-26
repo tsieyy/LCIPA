@@ -2,7 +2,7 @@ import streamlit as st
 from utils.login import make_sure_login
 from utils.json import open_task
 from chat_bot.clear_results import with_clear_container
-from researcher import run_task, RESEARCHER_OUTPUT_PATH
+from research import run_task, RESEARCHER_OUTPUT_PATH
 import asyncio
 
 from utils.redirect import redirect_stdout_to_streamlit
