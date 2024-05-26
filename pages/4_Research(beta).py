@@ -24,7 +24,7 @@ if make_sure_login():
     guidelines_list = [item for item in guidelines_list if item != ""]
 
     if with_clear_container(submit_clicked):
-        task = open_task('researcher/task.json')
+        task = open_task('research/task.json')
         task["query"] = user_input
         # task["verbose"] = False
         if len(guidelines_list) == 0:

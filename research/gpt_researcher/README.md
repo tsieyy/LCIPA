@@ -26,8 +26,9 @@ $ export OPENAI_API_KEY={Your OpenAI API Key here}
 $ export TAVILY_API_KEY={Your Tavily API Key here}
 ```
 > **Step 3** - Start Coding using GPT Researcher in your own code, example:
+
 ```python
-from gpt_researcher import GPTResearcher
+from research.gpt_researcher import GPTResearcher
 import asyncio
 
 
