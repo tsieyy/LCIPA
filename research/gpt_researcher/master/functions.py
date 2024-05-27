@@ -1,11 +1,10 @@
 import asyncio
-import json
 
 import markdown
 
-from gpt_researcher.master.prompts import *
-from gpt_researcher.scraper.scraper import Scraper
-from gpt_researcher.utils.llm import *
+from research.gpt_researcher.master.prompts import *
+from research.gpt_researcher.scraper.scraper import Scraper
+from research.gpt_researcher.utils.llm import *
 
 def get_retriever(retriever):
     """
@@ -19,28 +18,28 @@ def get_retriever(retriever):
     """
     match retriever:
         case "tavily":
-            from gpt_researcher.retrievers import TavilySearch
+            from research.gpt_researcher.retrievers import TavilySearch
             retriever = TavilySearch
         case "tavily_news":
-            from gpt_researcher.retrievers import TavilyNews
+            from research.gpt_researcher.retrievers import TavilyNews
             retriever = TavilyNews
         case "google":
-            from gpt_researcher.retrievers import GoogleSearch
+            from research.gpt_researcher.retrievers import GoogleSearch
             retriever = GoogleSearch
         case "searx":
-            from gpt_researcher.retrievers import SearxSearch
+            from research.gpt_researcher.retrievers import SearxSearch
             retriever = SearxSearch
         case "serpapi":
-            from gpt_researcher.retrievers import SerpApiSearch
+            from research.gpt_researcher.retrievers import SerpApiSearch
             retriever = SerpApiSearch
         case "googleSerp":
-            from gpt_researcher.retrievers import SerperSearch
+            from research.gpt_researcher.retrievers import SerperSearch
             retriever = SerperSearch
         case "duckduckgo":
-            from gpt_researcher.retrievers import Duckduckgo
+            from research.gpt_researcher.retrievers import Duckduckgo
             retriever = Duckduckgo
         case "BingSearch":
-            from gpt_researcher.retrievers import BingSearch
+            from research.gpt_researcher.retrievers import BingSearch
             retriever = BingSearch
 
         case _:

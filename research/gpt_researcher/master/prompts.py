@@ -1,6 +1,6 @@
 from datetime import datetime, timezone
 import warnings
-from gpt_researcher.utils.enum import ReportType
+from research.gpt_researcher.utils.enum import ReportType
 
 
 def generate_search_queries_prompt(question: str, parent_query: str, report_type: str, max_iterations: int = 3, ):

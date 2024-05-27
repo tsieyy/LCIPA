@@ -1,5 +1,5 @@
 {
-  "query": "聊天机器人是否已经影响了我们的生活?",
+  "query": "湖北工业大学在中国的发展如何？",
   "max_sections": 3,
   "publish_formats": {
     "markdown": true,
@@ -7,11 +7,11 @@
     "docx": true
   },
   "follow_guidelines": true,
-  "model": "gpt-3.5-turbo",
+  "model": "gpt-4o",
   "guidelines": [
     "The report MUST be written in APA format",
     "Each sub section MUST include supporting sources using hyperlinks. If none exist, erase the sub section or rewrite it to be a part of the previous section",
-    "The report MUST be written in Chinese"
+    "The report MUST be written in Chinese, whether it is the main text, title or anything else."
   ],
   "verbose": true
 }

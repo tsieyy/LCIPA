@@ -4,7 +4,7 @@ from pathlib import Path
 
 from langgraph.graph import StateGraph, END
 from .utils.views import print_agent_output
-from researcher.memory.research import ResearchState
+from research.memory.research import ResearchState
 
 # Import agent classes
 from . import \

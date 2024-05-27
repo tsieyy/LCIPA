@@ -2,7 +2,7 @@ import streamlit as st
 from utils.login import make_sure_login
 from utils.json import open_task
 from chat_bot.clear_results import with_clear_container
-from researcher import run_task, RESEARCHER_OUTPUT_PATH
+from research import run_task, RESEARCHER_OUTPUT_PATH
 import asyncio
 
 from utils.redirect import redirect_stdout_to_streamlit
@@ -24,7 +24,7 @@ if make_sure_login():
     guidelines_list = [item for item in guidelines_list if item != ""]
 
     if with_clear_container(submit_clicked):
-        task = open_task('researcher/task.json')
+        task = open_task('research/task.json')
         task["query"] = user_input
         # task["verbose"] = False
         if len(guidelines_list) == 0:

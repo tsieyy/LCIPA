@@ -1,11 +1,10 @@
-import asyncio
 import time
 
-from gpt_researcher.config import Config
-from gpt_researcher.context.compression import ContextCompressor
-from gpt_researcher.master.functions import *
-from gpt_researcher.memory import Memory
-from gpt_researcher.utils.enum import ReportType
+from research.gpt_researcher.config import Config
+from research.gpt_researcher.context.compression import ContextCompressor
+from research.gpt_researcher.master.functions import *
+from research.gpt_researcher.memory import Memory
+from research.gpt_researcher.utils.enum import ReportType
 
 
 class GPTResearcher:
