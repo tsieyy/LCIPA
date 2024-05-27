@@ -3,7 +3,7 @@ FROM python:3.11-buster as builder
 
 RUN apt-get update && apt-get install -y git
 
-RUN pip install poetry==1.4.2
+RUN pip install poetry==1.8.3
 
 ENV POETRY_NO_INTERACTION=1 \
     POETRY_VIRTUALENVS_IN_PROJECT=1 \
@@ -25,7 +25,7 @@ ENV VIRTUAL_ENV=/app/.venv \
 
 COPY --from=builder ${VIRTUAL_ENV} ${VIRTUAL_ENV}
 
-COPY ./streamlit_agent ./streamlit_agent
+COPY . ./
 
 
-CMD ["streamlit", "run", "streamlit_agent/chat_pandas_df.py", "--server.port", "8051"]
+CMD ["streamlit", "run", "main.py", "--server.port", "8051"]

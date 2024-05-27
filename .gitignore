@@ -5,9 +5,7 @@ poetry.lock
 .ipynb_checkpoints
 token.json
 __pycache__
-temp_files/:
+temp_files
 !temp_files/hello.txt
-research/outputs
-research/temp_files
 research/outputs
 research/temp_files
