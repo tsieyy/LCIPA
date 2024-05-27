@@ -6,6 +6,7 @@ import yaml
 from yaml.loader import SafeLoader
 
 from utils.login import assert_login
+from utils.welcome import robo_avatar_component
 # from utils.welcome import CCBOT
 
 
@@ -13,6 +14,8 @@ from utils.login import assert_login
 st.set_page_config(
     page_title="Chat-Bot", page_icon="🦜", layout="wide", initial_sidebar_state="collapsed"
 )
+
+# st.logo('docs/imgs/logo_banner_image_1.png')
 
 # TODO: design the menu
 # with st.sidebar:
@@ -66,8 +69,8 @@ if not assert_login():
 
 else:
     # TODO： 需要加上一些欢迎语句 到时候再写把
-    st.success('Login Success!', icon="✅")
-    with open('README.md', 'r') as file:
-        # 读取文件内容
-        content = file.read()
-    st.markdown(content)
+    st.toast('Login Success!')
+    st.image('docs/imgs/logo_banner_image_1.png', width=600)
+    st.title("Welcome to use CCBot!")
+
+    robo_avatar_component()
