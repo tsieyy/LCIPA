@@ -43,6 +43,13 @@ LangChain项目依赖很多api,本项目也不例外，如果要正确运行请�
 └── token.json          // gmail权限申请之后自动生成的一个token文件，生成方法可以点开这个文件看看
 ```
 
+### 有关Gmail认证
+
+首先需要查看一下[LangChain官方关于Gmail的实例](https://python.langchain.com/v0.1/docs/integrations/toolkits/gmail/),
+里面有介绍如何认证.
+
+在本项目中,按照官方示例的办法获取到了`credentials.json`之后,可以运行`examples/LangChain_Gmail.ipynb`中的代码,
+成功运行之后会跳转到一个google认证界面,完成认证后会在`example`目录中创建一个`token.json`文件,将这个文件拷贝到`config`目录中即可.
 
 ### 本地运行
 
@@ -61,17 +68,17 @@ streamlit run main.py
 
 ### docker运行
 
-嫌上面的运行方法麻烦的话，这里也提供了docker运行的方式，
-**最好看一下与docker相关的两个文件**：
+(TODO: 还未完成)
 
-```bash
-docker-compose up
-```
+使用虽然docker相关文件已经准备好了,但是使用docker部署会出现[watchdog报错](https://discuss.streamlit.io/t/watchdog-error-when-running-streamlit-in-docker/26865),
+可能需要将streamlit降级使用,如果需要使用docker进行部署,可以把`pyproject.toml`中的streamlit版本降低一些. 没有测试过可能还是会有问题.
 
 ## 参考
 
-本项目中的部分代码参考自下面的仓库(LangChain官方示例仓库)：
+本项目中的部分代码参考自下面的仓库(前两者为官方示例仓库)：
 
 [streamlit-agent](https://github.com/langchain-ai/streamlit-agent)
 
 [langgraph/examples](https://github.com/langchain-ai/langgraph/tree/main/examples/multi_agent)
+
+[gpt_research](https://github.com/assafelovic/gpt-researcher/tree/master/multi_agents)
