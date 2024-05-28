@@ -6,6 +6,7 @@ from research import run_task, RESEARCHER_OUTPUT_PATH
 import asyncio
 
 from utils.redirect import redirect_stdout_to_streamlit
+from utils.file_helper import get_md_file, get_pdf_file, get_docx_file
 
 # 设置页面的状态
 st.set_page_config(
@@ -44,7 +45,7 @@ if make_sure_login():
         if RESEARCHER_OUTPUT_PATH != '' and research_complete:
             col1, col2, col3 = st.columns(3)
             with col1:
-                with open(RESEARCHER_OUTPUT_PATH + "flower.png", "rb") as file:
+                with open(get_pdf_file(RESEARCHER_OUTPUT_PATH), "rb") as file:
                     btn1 = st.download_button(
                         label="Download PDF",
                         data=file,
@@ -53,7 +54,7 @@ if make_sure_login():
                     )
 
             with col2:
-                with open("flower.png", "rb") as file:
+                with open(get_md_file(RESEARCHER_OUTPUT_PATH), "rb") as file:
                     btn2 = st.download_button(
                         label="Download Markdown",
                         data=file,
@@ -62,7 +63,7 @@ if make_sure_login():
                     )
 
             with col3:
-                with open("flower.png", "rb") as file:
+                with open(get_docx_file(RESEARCHER_OUTPUT_PATH), "rb") as file:
                     btn3 = st.download_button(
                         label="Download Docx",
                         data=file,
