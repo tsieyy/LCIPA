@@ -9,7 +9,7 @@ from typing import Annotated, List
 from langchain_core.tools import tool
 
 _TEMP_DIRECTORY = TemporaryDirectory()
-WORKING_DIRECTORY = Path("temp_files")
+WORKING_DIRECTORY = Path("fs")
 
 
 @tool

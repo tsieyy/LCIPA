@@ -9,3 +9,5 @@ temp_files
 !temp_files/hello.txt
 research/outputs
 research/temp_files
+fs
+!fs/hello.txt

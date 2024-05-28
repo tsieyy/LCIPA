@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import json
 import logging
+import os
 from typing import Optional
 
 from colorama import Fore, Style
@@ -19,8 +20,12 @@ from .validators import Subtopics
 def get_provider(llm_provider):
     match llm_provider:
         case "openai":
-            from ..llm_provider import OpenAIProvider
-            llm_provider = OpenAIProvider
+            if "OPENAI_API_KEY_CN" in os.environ:
+                from ..llm_provider import OpenAIProviderCN
+                llm_provider = OpenAIProviderCN
+            else:
+                from ..llm_provider import OpenAIProvider
+                llm_provider = OpenAIProvider
         case "azureopenai":
             from ..llm_provider import AzureOpenAIProvider
             llm_provider = AzureOpenAIProvider
@@ -124,7 +129,11 @@ async def construct_subtopics(task: str, data: str, config, subtopics: list = []
         print(f"\n🤖 Calling {config.smart_llm_model}...\n")
 
         if config.llm_provider == "openai":
-            model = ChatOpenAI(model=config.smart_llm_model)
+            if "OPENAI_API_KEY_CN" in os.environ:
+                from ..llm_provider import OpenAIProviderCN
+                model = OpenAIProviderCN.get_chat_model(config.smart_llm_model)
+            else:
+                model = ChatOpenAI(model=config.smart_llm_model)
         elif config.llm_provider == "azureopenai":
             from langchain_openai import AzureChatOpenAI
             model = AzureChatOpenAI(model=config.smart_llm_model)
