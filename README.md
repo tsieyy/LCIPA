@@ -43,14 +43,6 @@ LangChain项目依赖很多api,本项目也不例外，如果要正确运行请�
 └── token.json          // gmail权限申请之后自动生成的一个token文件，生成方法可以点开这个文件看看
 ```
 
-### 有关Gmail认证
-
-首先需要查看一下[LangChain官方关于Gmail的实例](https://python.langchain.com/v0.1/docs/integrations/toolkits/gmail/),
-里面有介绍如何认证.
-
-在本项目中,按照官方示例的办法获取到了`credentials.json`之后,可以运行`examples/LangChain_Gmail.ipynb`中的代码,
-成功运行之后会跳转到一个google认证界面,完成认证后会在`example`目录中创建一个`token.json`文件,将这个文件拷贝到`config`目录中即可.
-
 ### 本地运行
 
 本项目使用 *poetry* 作为项目管理工具，需要提前安装好，具体安装过程请自行STFW
@@ -72,6 +64,29 @@ streamlit run main.py
 
 使用虽然docker相关文件已经准备好了,但是使用docker部署会出现[watchdog报错](https://discuss.streamlit.io/t/watchdog-error-when-running-streamlit-in-docker/26865),
 可能需要将streamlit降级使用,如果需要使用docker进行部署,可以把`pyproject.toml`中的streamlit版本降低一些. 没有测试过可能还是会有问题.
+
+## ⚠️ 注意
+
+### 有关Gmail认证
+
+首先需要查看一下[LangChain官方关于Gmail的实例](https://python.langchain.com/v0.1/docs/integrations/toolkits/gmail/),
+里面有介绍如何认证.
+
+在本项目中,按照官方示例的办法获取到了`credentials.json`之后,可以运行`examples/LangChain_Gmail.ipynb`中的代码,
+成功运行之后会跳转到一个google认证界面,完成认证后会在`example`目录中创建一个`token.json`文件,将这个文件拷贝到`config`目录中即可.
+
+### 有关OpenAI API
+
+上文提到的两个聊天机器人只需要使用`gpt-3.5-turbo`就行了,
+本机器人还把[gpt_research](https://github.com/assafelovic/gpt-researcher/tree/master/multi_agents)
+缝了进来,这个项目需要使用gpt4的API才能比较稳定的运行,如果在郭内使用中转的API的话,需要配置两个额外的支持gpt4的API的环境变量:
+
+```
+OPENAI_API_KEY_CN=sk-xxx
+OPENAI_API_BASE_CN=https://xxx
+```
+
+把上述两个环境变量放到`config/.env`里面即可.
 
 ## 参考
 
