@@ -12,8 +12,8 @@ def get_pdf_file(directory):
     if len(pdf_files) > 1:
         raise Exception("More than one PDF file found in the directory.")
     elif len(pdf_files) == 0:
-        raise Exception("No PDF file found in the directory.")
-
+        # raise Exception("No PDF file found in the directory.")
+        return None
     # 返回文件的完整路径
     return os.path.join(directory, pdf_files[0])
 
@@ -24,7 +24,8 @@ def get_md_file(directory):
     if len(md_files) > 1:
         raise Exception("More than one Markdown file found in the directory.")
     elif len(md_files) == 0:
-        raise Exception("No Markdown file found in the directory.")
+        # raise Exception("No Markdown file found in the directory.")
+        return None
     return os.path.join(directory, md_files[0])
 
 
@@ -34,5 +35,6 @@ def get_docx_file(directory):
     if len(docx_files) > 1:
         raise Exception("More than one Docx file found in the directory.")
     elif len(docx_files) == 0:
-        raise Exception("No Docx file found in the directory.")
+        # raise Exception("No Docx file found in the directory.")
+        return None
     return os.path.join(directory, docx_files[0])
