@@ -1,6 +1,10 @@
 import streamlit as st
 from streamlit_file_browser import st_file_browser
 
+st.set_page_config(
+    page_title="Files", page_icon="🦜", layout="wide",
+)
+
 st.header('File System')
 event = st_file_browser(
     path="fs",
