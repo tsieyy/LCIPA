@@ -38,9 +38,8 @@ class OpenAIProvider:
         Returns:
 
         """
-        base_url = os.environ.get("OPENAI_BASE_URL", None)
+        base_url = os.environ.get("OPENAI_API_BASE", None)
         return base_url
-
 
     def get_llm_model(self):
         # Initializing the chat model
@@ -48,10 +47,9 @@ class OpenAIProvider:
             model=self.model,
             temperature=self.temperature,
             max_tokens=self.max_tokens,
-            api_key=self.api_key
+            api_key=self.api_key,
+            base_url=self.base_url if self.base_url else None
         )
-        if self.base_url:
-            llm.base_url = self.base_url
 
         return llm
 
@@ -83,3 +81,38 @@ class OpenAIProvider:
                     paragraph = ""
 
         return response
+
+
+class OpenAIProviderCN(OpenAIProvider):
+
+    def __init__(self, model, temperature, max_tokens):
+        super().__init__(model, temperature, max_tokens)
+
+    def get_api_key(self):
+        """
+        Gets the OpenAI API key for China
+        Returns:
+
+        """
+        try:
+            api_key = os.environ["OPENAI_API_KEY_CN"]
+        except KeyError:
+            raise Exception(
+                "OpenAI API key for China not found. Please set the OPENAI_API_KEY_CN environment variable.")
+        return api_key
+
+    def get_base_url(self):
+        """
+        Gets the OpenAI Base URL for China from the environment variable if defined otherwise use the default one
+        Returns:
+
+        """
+        base_url = os.environ.get("OPENAI_API_BASE_CN", None)
+        return base_url
+
+    @classmethod
+    def get_chat_model(cls, model):
+        api_key = os.environ["OPENAI_API_KEY_CN"]
+        base_url = os.environ.get("OPENAI_API_BASE_CN", None)
+        return ChatOpenAI(model=model, openai_api_key=api_key, openai_api_base=base_url)
+

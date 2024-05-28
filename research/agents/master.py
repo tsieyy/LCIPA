@@ -19,8 +19,8 @@ RESEARCHER_OUTPUT_PATH = ''
 class ChiefEditorAgent:
     def __init__(self, task: dict):
         self.task_id = int(time.time()) # Currently time based, but can be any unique identifier
-        self.output_dir = f"temp_files/research/run_{self.task_id}_{task.get('query')[0:60]}"
-        # self.output_dir = (Path(__file__).parent.parent.parent / f"temp_files/output/run_{self.task_id}_{task.get('query')[0:60]}").absolute().name
+        self.output_dir = f"fs/research/run_{self.task_id}_{task.get('query')[0:60]}"
+        # self.output_dir = (Path(__file__).parent.parent.parent / f"fs/output/run_{self.task_id}_{task.get('query')[0:60]}").absolute().name
         global RESEARCHER_OUTPUT_PATH
         RESEARCHER_OUTPUT_PATH = self.output_dir
         self.task = task
