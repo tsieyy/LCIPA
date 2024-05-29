@@ -1,5 +1,4 @@
-config
-!research/researcher/config
+/config
 .idea
 poetry.lock
 .ipynb_checkpoints
