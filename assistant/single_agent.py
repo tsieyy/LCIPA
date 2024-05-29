@@ -1,28 +1,16 @@
-from uuid import uuid4
-
-from langchain import hub
-from langchain.agents import create_react_agent, initialize_agent, AgentType, AgentExecutor, create_openai_tools_agent
+from langchain.agents import create_openai_tools_agent, AgentExecutor
 from langchain_community.chat_message_histories import StreamlitChatMessageHistory
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.runnables.history import RunnableWithMessageHistory
 
-from chat_bot.lc.llm import llm, chat
-from chat_bot.lc.tool import tools
-from chat_bot.lc.RAG import configure_retriever, PrintRetrievalHandler, StreamHandler
-from chat_bot.lc.db import LOCALDB, INJECTION_WARNING, create_agent_db_from_url
-
-
-
-# Initialize agent
-react_agent = create_react_agent(llm, tools, hub.pull("hwchase17/react"))
-agent_ = initialize_agent(tools=tools, llm=llm, agent=AgentType.STRUCTURED_CHAT_ZERO_SHOT_REACT_DESCRIPTION, verbose=True)
-mrkl = AgentExecutor(agent=react_agent, tools=tools)
-
-# Initialize agent_db
+from assistant.llm_provider.openai.gpt import CHAT
+from assistant.tools.researcher.serpapi import serp_search_tool
+from assistant.tools.researcher.wikipedia import wiki_search_tool
+from assistant.tools.math.calculator import calculator_tool
 
 
 # Adapted from https://smith.langchain.com/hub/hwchase17/openai-tools-agent
-prompt_ = ChatPromptTemplate.from_messages(
+openai_tools_prompt = ChatPromptTemplate.from_messages(
     [
         (
             "system",
@@ -45,7 +33,16 @@ msgs = StreamlitChatMessageHistory(key="langchain_messages")
 if len(msgs.messages) == 0:
     msgs.add_ai_message("How can I help you?")
 
-agent = create_openai_tools_agent(chat, tools, prompt_)
+# set tools
+tools = [
+    serp_search_tool,
+    wiki_search_tool,
+    calculator_tool,
+]
+
+# openai agent(BUG：如果用中转api, 这里就会报错，还不知道是什么原因)
+agent = create_openai_tools_agent(CHAT, tools, openai_tools_prompt)
+
 agent_executor = AgentExecutor(agent=agent, tools=tools, )
 
 chain_with_history = RunnableWithMessageHistory(
@@ -55,4 +52,3 @@ chain_with_history = RunnableWithMessageHistory(
     output_messages_key="output",
     history_messages_key="history",
 )
-
