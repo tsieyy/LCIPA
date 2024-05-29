@@ -2,7 +2,8 @@ import streamlit as st
 from langchain.callbacks.streamlit import StreamlitCallbackHandler
 
 from utils.login import make_sure_login
-from chat_bot.cb_demo import msgs, chain_with_history
+# from chat_bot.cb_demo import msgs, chain_with_history
+from assistant.single_agent import msgs, chain_with_history
 
 view_messages = st.expander("View the message contents in session state")
 
