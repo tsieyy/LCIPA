@@ -2,9 +2,8 @@ import asyncio
 
 import markdown
 
-from research.gpt_researcher.master.prompts import *
-from research.gpt_researcher.scraper.scraper import Scraper
-from research.gpt_researcher.utils.llm import *
+from research.agents.gpt_researcher.scraper.scraper import Scraper
+
 
 def get_retriever(retriever):
     """
@@ -18,28 +17,28 @@ def get_retriever(retriever):
     """
     match retriever:
         case "tavily":
-            from research.gpt_researcher.retrievers import TavilySearch
+            from research.agents.gpt_researcher.retrievers import TavilySearch
             retriever = TavilySearch
         case "tavily_news":
-            from research.gpt_researcher.retrievers import TavilyNews
+            from research.agents.gpt_researcher.retrievers import TavilyNews
             retriever = TavilyNews
         case "google":
-            from research.gpt_researcher.retrievers import GoogleSearch
+            from research.agents.gpt_researcher.retrievers import GoogleSearch
             retriever = GoogleSearch
         case "searx":
-            from research.gpt_researcher.retrievers import SearxSearch
+            from research.agents.gpt_researcher.retrievers import SearxSearch
             retriever = SearxSearch
         case "serpapi":
-            from research.gpt_researcher.retrievers import SerpApiSearch
+            from research.agents.gpt_researcher.retrievers import SerpApiSearch
             retriever = SerpApiSearch
         case "googleSerp":
-            from research.gpt_researcher.retrievers import SerperSearch
+            from research.agents.gpt_researcher.retrievers import SerperSearch
             retriever = SerperSearch
         case "duckduckgo":
-            from research.gpt_researcher.retrievers import Duckduckgo
+            from research.agents.gpt_researcher.retrievers import Duckduckgo
             retriever = Duckduckgo
         case "BingSearch":
-            from research.gpt_researcher.retrievers import BingSearch
+            from research.agents.gpt_researcher.retrievers import BingSearch
             retriever = BingSearch
 
         case _:
