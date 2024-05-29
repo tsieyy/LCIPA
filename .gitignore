@@ -1,5 +1,5 @@
 config
-!research/agents/gpt_researcher/config
+!research/researcher/config
 .idea
 poetry.lock
 .ipynb_checkpoints

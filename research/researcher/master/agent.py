@@ -1,9 +1,9 @@
 import time
 
-from research.agents.gpt_researcher.config import Config
-from research.agents.gpt_researcher.context.compression import ContextCompressor
-from research.agents.gpt_researcher.memory import Memory
-from research.agents.gpt_researcher.utils.enum import ReportType
+from research.researcher.config import Config
+from research.researcher.context.compression import ContextCompressor
+from research.researcher.memory import Memory
+from research.researcher.utils.enum import ReportType
 
 
 class GPTResearcher:

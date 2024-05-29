@@ -2,7 +2,7 @@ import asyncio
 
 import markdown
 
-from research.agents.gpt_researcher.scraper.scraper import Scraper
+from research.researcher.scraper.scraper import Scraper
 
 
 def get_retriever(retriever):
@@ -17,28 +17,28 @@ def get_retriever(retriever):
     """
     match retriever:
         case "tavily":
-            from research.agents.gpt_researcher.retrievers import TavilySearch
+            from research.researcher.retrievers import TavilySearch
             retriever = TavilySearch
         case "tavily_news":
-            from research.agents.gpt_researcher.retrievers import TavilyNews
+            from research.researcher.retrievers import TavilyNews
             retriever = TavilyNews
         case "google":
-            from research.agents.gpt_researcher.retrievers import GoogleSearch
+            from research.researcher.retrievers import GoogleSearch
             retriever = GoogleSearch
         case "searx":
-            from research.agents.gpt_researcher.retrievers import SearxSearch
+            from research.researcher.retrievers import SearxSearch
             retriever = SearxSearch
         case "serpapi":
-            from research.agents.gpt_researcher.retrievers import SerpApiSearch
+            from research.researcher.retrievers import SerpApiSearch
             retriever = SerpApiSearch
         case "googleSerp":
-            from research.agents.gpt_researcher.retrievers import SerperSearch
+            from research.researcher.retrievers import SerperSearch
             retriever = SerperSearch
         case "duckduckgo":
-            from research.agents.gpt_researcher.retrievers import Duckduckgo
+            from research.researcher.retrievers import Duckduckgo
             retriever = Duckduckgo
         case "BingSearch":
-            from research.agents.gpt_researcher.retrievers import BingSearch
+            from research.researcher.retrievers import BingSearch
             retriever = BingSearch
 
         case _:
