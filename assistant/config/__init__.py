@@ -1,5 +1,9 @@
 from .config import Config
 
-__all__ =[
+cfg = Config()
+
+__all__ = [
+    'cfg',
     'Config'
 ]
+
