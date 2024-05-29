@@ -1,3 +1,6 @@
+
+![logo](docs/imgs/logo_banner_image_1.png)
+
 # CCBot (Comprehensive Chat Bot) 
 
 一款使用LangChain和Streamlit构建的综合性聊天机器人，
