@@ -4,7 +4,12 @@ from langchain.callbacks.streamlit import StreamlitCallbackHandler
 from langchain_core.messages import HumanMessage
 
 from utils.login import make_sure_login
-from chat_bot.ma_demo import graph, msgs
+from assistant.multi_agents import graph, msgs
+
+# 设置页面的状态
+st.set_page_config(
+    page_title="Chat bot Plus", page_icon="🦜", layout="wide",
+)
 
 view_messages = st.expander("View the message contents in session state")
 
