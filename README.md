@@ -2,8 +2,8 @@
 
 # LCIPA (LangChain Intelligent Personal Assistant) 
 
-一款使用LangChain和Streamlit构建的综合性聊天机器人，
-本项目将机器人分为**普通版本**和**PLUS版本**。
+一款使用LangChain和Streamlit构建的综合性个人智能助手，
+本项目将助手分为**普通版本**和**PLUS版本**。
 
 **普通版本：**
 在原有OpenAI聊天机器人的基础之上增加了以下功能：
