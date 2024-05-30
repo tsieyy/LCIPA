@@ -12,7 +12,7 @@ from utils.welcome import robo_avatar_component
 
 # 设置页面的状态
 st.set_page_config(
-    page_title="Chat-Bot", page_icon="🦜", layout="wide", initial_sidebar_state="collapsed"
+    page_title="Chat-Bot", page_icon="🦜", layout="wide",
 )
 
 # st.logo('docs/imgs/logo_banner_image_1.png')
@@ -70,7 +70,12 @@ if not assert_login():
 else:
     # TODO： 需要加上一些欢迎语句 到时候再写把
     st.toast('Login Success!')
-    st.image('docs/imgs/logo_banner_image_1.png', width=600)
-    st.title("Welcome to use CCBot!")
+    st.image('docs/imgs/logo_banner_image_1.png')
+    st.title("Welcome to use LCIPA!")
+    st.write("The LangChain IPA is an innovative product developed based on artificial intelligence technology. It "
+             "perfectly combines web search, file processing and email management to help people handle tedious work "
+             "more easily. This product is efficient and intelligent, helping users quickly find the information they "
+             "need and organize it into files. It can also automatically process and send emails, making users' work "
+             "more efficient and convenient.")
 
     robo_avatar_component()
