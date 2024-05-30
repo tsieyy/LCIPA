@@ -1,4 +1,5 @@
 
+![logo](docs/imgs/logo_cover_photo_1.png)
 
 # LCIPA (LangChain Intelligent Personal Assistant) 
 
@@ -40,6 +41,7 @@ LangChain项目依赖很多api,本项目也不例外，如果要正确运行请�
 ```
 .
 ├── credentials.json    // gmail邮箱的权限文件，具体信息请看LangChain中的Gmail部分
+├── config.ini          // 一些配置文件，不算太重要，想修改也可以修改一下
 ├── .env                // 所有的API token，OpenAI的等等。。。
 ├── passwd.yaml         // streamlit-authenticator所使用的登陆密码文件（这个项目也用了一个简单登陆管理）
 └── token.json          // gmail权限申请之后自动生成的一个token文件，生成方法可以点开这个文件看看
@@ -103,7 +105,8 @@ OPENAI_API_BASE_CN=https://xxx
 
 话说回来，这个项目只是一个用于~~混毕业~~的项目，本人将论文放在了这个目录中，有一些涉及个人信息的效果图已经被删除了，不过完全可以复现出来。
 
-论文题目从原来的“聊天机器人”变成了“个人智能助手”，项目的名字就不改了，其实都差不多。。
+论文题目从原来的“聊天机器人”变成了“个人智能助手”，~~项目的名字就不改了，其实都差不多。。~~ 
+（好吧，最后项目名字还是改了一下，还是用助手吧，前文中有很多内容还是使用的“聊天机器人做为称呼”，懒得改了都差不多）
 论文的内容大多数都来自某乎，但查重复写率貌似只有个位数。
 
 ## 参考
