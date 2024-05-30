@@ -1,11 +1,14 @@
 [tool.poetry]
-name = "CCBot"
-version = "0.2.0"
-description = "A Comprehensive Chat Bot Build With LangChain."
+name = "lcipa"
+version = "2.0.0"
+description = "An intelligent personal assistant built using the LangChain framework."
 authors = ["Cai, Zhengyang <tsieyy@qq.com>"]
 license = "MIT"
 readme = "README.md"
-packages = [{include = "chat_bot"}]
+packages = [
+    {include = "assistant"},
+    {include = "research"},
+]
 package-mode = false
 
 [tool.poetry.dependencies]
