@@ -2,6 +2,7 @@ import time
 
 from research.researcher.config import Config
 from research.researcher.context.compression import ContextCompressor
+from research.researcher.master.functions import *
 from research.researcher.memory import Memory
 from research.researcher.utils.enum import ReportType
 
